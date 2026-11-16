@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CareSync Employee Hub</title>
+<style>
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f5f3ee;color:#163f28;display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center}
+.box{padding:24px}
+.spin{width:42px;height:42px;border:4px solid #e2d9c0;border-top-color:#1f5a37;border-radius:50%;margin:0 auto 16px;animation:s 1s linear infinite}
+@keyframes s{to{transform:rotate(360deg)}}
+button{margin-top:12px;background:#1f5a37;color:#fff;border:0;border-radius:8px;padding:10px 18px;font-size:16px}
+</style>
+</head>
+<body>
+<div class="box" id="box"><div class="spin"></div><strong>Rose of Sharon Senior Villa</strong><p>Opening the CareSync Employee Hub…</p></div>
+<script>
+(function () {
+  var API = 'https://script.google.com/macros/s/AKfycbxf8oZz4Sb2espgnflqIIcH24voYWEgO0Qvn-8RBTYLbmnOR6UfNf2Zj0FHahuL4Udh/exec';
+  window.CARESYNC_API = API;
+  function fail() {
+    document.getElementById('box').innerHTML = '<strong>We couldn’t open the hub.</strong><p>Check your internet connection and try again.</p><button onclick="location.reload()">Try again</button>';
+  }
+  fetch(API + '?view=raw', { credentials: 'omit' })
+    .then(function (res) { if (!res.ok) throw new Error(); return res.text(); })
+    .then(function (html) {
+      if (html.indexOf('<html') < 0) throw new Error();
+      var setup = '<script>window.CARESYNC_API=' + JSON.stringify(API) + ';<\/script>';
+      html = html.replace(/<head>/i, '<head>' + setup);
+      document.open();
+      document.write(html);
+      document.close();
+    })
+    .catch(fail);
+})();
+</script>
+</body>
+</html>
